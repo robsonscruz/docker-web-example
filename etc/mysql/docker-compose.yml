@@ -1,0 +1,16 @@
+version: '2.1'
+
+services:
+  mysql:
+      build: .
+      ports:
+        - "3306:3306"
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+        MYSQL_DATABASE: project_deploy
+      volumes:
+        - ../../var/lib/mysql:/var/lib/mysql
+        - ./my.cnf:/etc/mysql/conf.d/my.cnf

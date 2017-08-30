@@ -1,0 +1,65 @@
+version: "2.1"
+
+services:
+  globalenv:
+    image: debian
+    extends:
+      file: volumes.yml
+      service: globalenv
+    network_mode: "bridge"
+
+  proxy:
+    build: ./etc/proxy
+    volumes:
+        - /var/run/docker.sock:/tmp/docker.sock
+    ports:
+        - "80:80"
+    network_mode: "bridge"
+
+  redis:
+    extends:
+      file: ./etc/redis/docker-compose.yml
+      service: redis
+    network_mode: "bridge"
+
+  mysql:
+    extends:
+      file: ./etc/mysql/docker-compose.yml
+      service: mysql
+    volumes_from:
+      - globalenv
+    network_mode: "bridge"
+
+  web-corporate:
+    build: ./etc/web
+    environment:
+      - VIRTUAL_HOST=corporate-test.dev
+    volumes:
+      - ./etc/web/conf/nginx/corporate-test.conf:/etc/nginx/conf.d/corporate-test.conf
+    network_mode: "bridge"
+    links:
+      - redis:redishost
+      - mysql:mysqlhost
+    privileged: true
+    volumes_from:
+      - globalenv
+    ports:
+      - "80"
+    entrypoint: /usr/bin/supervisord
+
+  web-api:
+    build: ./etc/web
+    environment:
+      - VIRTUAL_HOST=api-test.dev
+    volumes:
+      - ./etc/web/conf/nginx/api-test.conf:/etc/nginx/conf.d/api-test.conf
+    network_mode: "bridge"
+    links:
+      - redis:redishost
+      - mysql:mysqlhost
+    privileged: true
+    volumes_from:
+      - globalenv
+    ports:
+      - "80"
+    entrypoint: /usr/bin/supervisord

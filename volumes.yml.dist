@@ -1,0 +1,7 @@
+version: '2.1'
+
+services:
+    globalenv:
+      volumes:
+        - ./www/api-test:/srv/web/api-test
+        - ./www/corporate-test:/srv/web/corporate-test
