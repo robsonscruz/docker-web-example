@@ -26,7 +26,6 @@ RUN apt-get update && apt-get install -y software-properties-common language-pac
         php7.1-iconv \
         php7.1-phar \
         php7.1-redis \
-        sendmail \
     && mkdir /run/php \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
