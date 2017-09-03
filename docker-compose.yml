@@ -63,3 +63,17 @@ services:
     ports:
       - "80"
     entrypoint: /usr/bin/supervisord
+
+  web-api-go:
+    build: ./etc/golang
+    environment:
+      - VIRTUAL_HOST=api-go-test.dev
+    network_mode: "bridge"
+    links:
+      - redis:redishost
+      - mysql:mysqlhost
+    privileged: true
+    volumes_from:
+      - globalenv
+    ports:
+      - "8180"
