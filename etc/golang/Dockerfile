@@ -1,22 +1,18 @@
 FROM golang
 
-#ARG app_env
-ENV APP_ENV production
-
-COPY ./app /go/src/github.com/user/api-go/app
-WORKDIR /go/src/github.com/user/api-go/app
+COPY ./app /go/src/github.com/robsonscruz/api-go
+WORKDIR /go/src/github.com/robsonscruz/api-go
 
 RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/robsonscruz/api-go
 RUN go get ./
+
 RUN go build
 
-CMD if [ ${APP_ENV} = production ]; \
-	then \
-	app; \
-	else \
-	go get github.com/pilu/fresh && \
-	fresh; \
-	fi
-	
+# RUN GO
+COPY ./runtime/entrypoint.sh /sbin/entrypoint.sh
+RUN chmod 755 /sbin/entrypoint.sh
+
 EXPOSE 8180
+
+CMD ["/sbin/entrypoint.sh"]
