@@ -4,7 +4,7 @@ MAINTAINER Jason Wilder jwilder@litl.com
 # Install wget and install/updates certificates
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \
-    ca-certificates \
+    libgpg-error0 libp11-kit0 ca-certificates \
     wget \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
